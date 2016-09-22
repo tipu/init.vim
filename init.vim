@@ -1,15 +1,19 @@
 
-set nocompatible              " be iMproved
 filetype off                  " required!
+syntax on
 
 au BufRead,BufNewFile *.py call matchadd('ColorColumn', '\%81v', 80)
 
+set shell=/usr/bin/zsh
+set termguicolors
+set foldmethod=indent
+set foldlevelstart=20
 set tags=$PWD/.ctags
 set shell=/bin/bash\ -f
 set listchars=tab:\ \ ,eol:$
 set wildignore+=venv
 set wildignore+=*.pyc
-set nocompatible
+set wildignore+=node_modules
 set smartindent
 set autoindent
 set smartcase
@@ -35,6 +39,16 @@ set lazyredraw
 "set spell
 let g:airline_powerline_fonts = 1
 
+" set spell when writing git commits
+au BufNewFile,BufRead COMMIT_EDITMSG setlocal spell
+
+"show method argument in typescript
+autocmd FileType typescript setlocal completeopt+=menu,preview
+
+let g:tsuquyomi_completion_detail = 1
+autocmd FileType typescript nmap <buffer> <Leader>i : <C-u>:TsuImport<CR>
+autocmd FileType typescript nmap <buffer> <Leader>r : <C-u>:TsuRenameSymbol<CR>
+
 autocmd BufWritePost *.py Neomake
 autocmd BufWritePost *.tex silent !pdflatex %:p
 autocmd BufWritePost *.ts Neomake
@@ -43,7 +57,7 @@ autocmd BufWritePost *.ts Neomake
 set nobackup
 set noswapfile
 
-"set t_Co=256
+
 "set go-=L " Removes left hand scroll bar
 set cursorline
 set ignorecase
@@ -51,6 +65,7 @@ set modeline
 set tabstop=4
 set shiftwidth=4
 set backspace=indent,start
+set shell=/usr/bin/zsh
 if &term =~ '^screen'
     execute "set <xUp>=\e[1;*A"
     execute "set <xDown>=\e[1;*B"
@@ -72,26 +87,40 @@ set mouse=""
 " Color
 "================================
 
+set background=dark
 
-" colorscheme abra
+" colorscheme blues
+colorscheme tender
+" colorscheme alduin
+" colorscheme obsidian
+" colorscheme seoul256
+" colorscheme sierra
+" colorscheme one
 " let g:solarized_termcolors=256
 " colorscheme solarized
 " colorscheme molokai
-" set background=light
 " colorscheme alduin
-colorscheme jellybeans
+" highlight Normal ctermbg='black'
+" colorscheme jellybeans
+"
+" highlight Normal ctermbg=NONE
+" highlight nonText ctermbg=NONE
+
+
 
 "================================
 " Mappings
 "================================
 nnoremap <C-t>     :tabnew<CR>
+nnoremap <Tab>     :tabnext<CR>
 
 let g:javascript_conceal = 1
+let python_highlight_all = 1
 
 let mapleader = ","
 
 
-map <leader>r :w !psql -d inventory -1 -f -<cr>
+map <leader>r :w !psql -d butterai -1 -f -<cr>
 map <Leader>t :TagbarToggle<CR>
 map <Bslash> :lnext<CR>
 map \| :lp<CR>
@@ -99,10 +128,10 @@ map \| :lp<CR>
 map <Leader>m :CtrlPMRUFiles<CR>
 map <Leader>f :CtrlPCurWD<CR>
 
-map <C-Right> <C-W><Right>
 map <C-Left> <C-W><Left>
 map <C-Down> <C-W><Down>
 map <C-Up> <C-W><Up>
+map <C-Right> <C-W><Right>
 
 map <silent> w <Plug>CamelCaseMotion_w
 map <silent> b <Plug>CamelCaseMotion_b
@@ -119,18 +148,15 @@ map <Leader>a :Ack
 vnoremap <Leader>s :sort<CR>
 
 let g:ctrlp_custom_ignore = {
-  \ 'dir':  '(node_modules|venv)',
+  \ 'dir':  '(node_modules|venv|env)',
  \ }
-let g:calendar_google_calendar = 1
-let g:calendar_google_task = 1
 
 "let g:ctrlp_by_filename = 1
 let g:ctrlp_switch_buffer = "e"
 
-
 "au BufRead,BufNewFile *.py set textwidth=100
 
-set rtp+=~/.vim/bundle/Vundle.vim
+set rtp+=~/.config/nvim/bundle/Vundle.vim
 call vundle#rc("~/.config/nvim/bundle")
 
 autocmd FileType typescript setlocal completeopt+=menu,preview
@@ -148,6 +174,7 @@ Bundle 'tpope/vim-surround'
 Bundle 'tpope/vim-fugitive'
 Bundle 'vim-airline/vim-airline'
 Bundle 'davidhalter/jedi-vim'
+
 "typescript client for server for autocomplete
 Bundle 'Quramy/tsuquyomi' 
 Bundle 'mileszs/ack.vim'
@@ -159,8 +186,8 @@ Bundle 'jaxbot/semantic-highlight.vim'
 Bundle 'majutsushi/tagbar'
 Bundle 'hdima/python-syntax'
 Bundle 'benekastah/neomake'
+Bundle 'evidens/vim-twig'
 call vundle#end()
-syntax on
 
 filetype plugin indent on 
 
@@ -201,3 +228,4 @@ augroup line_return  " Return vim to the last known position
         \   execute "normal! g'\"" |
         \ endif
 augroup END
+
